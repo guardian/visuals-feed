@@ -5,7 +5,7 @@
         "GET /": "index"
     },
 
-    "logdir": "var/logs",
+    "logdir": "var/log",
 
     "secret": "supersecret",
     "capi_key": "test",
