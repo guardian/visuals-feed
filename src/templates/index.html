@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Guardian Visuals - Interactives</title>
+</head>
+<body>
+    <style type="text/css">
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+        }
+        ul {
+            list-style-type: none;
+            font-family: 'Guardian Text Egyptian Web';
+            color: #222;
+            padding: 0;
+            font-size: 14px;
+            line-height: 20px;
+        }
+        li {
+            margin-bottom: 4px;
+        }
+        .link {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+            padding: 4px;
+            border: 1px solid #f1f1f1;
+            border-radius: 5px;
+            transition: border-color 0.2s;
+        }
+        .link:visited {
+            color: inherit;
+        }
+        .link:hover {
+            border-color: #767676;
+        }
+        .link:hover .headline {
+            text-decoration: underline;
+        }
+        .headline {
+            display: block;
+            font-weight: 300;
+        }
+        .date {
+            display: inline-block;
+            font-family: 'Guardian Egyptian Web';
+            font-weight: 500;
+            width: 100px;
+        }
+        .classification {
+            font-weight: 400;
+            text-decoration: underline;
+        }
+        .date, .classification {
+            color: #333;
+        }
+    </style>
+    <div class="container">
+
+        <h2>Latest visuals content</h2>
+
+        <ul>
+            {% for i in interactives %}
+             <li>
+                <a class="link" href="{{ i.url }}">
+                    <span class="date" title="{{ i.publicationTimeDisplay }}">{{ i.publicationTimeRelative }}</span><span class="classification">{{ i.message }}</span>
+                    <span class="headline">{{i.headline}}</span>
+                </a>
+            </li>
+            {% endfor %}
+
+        </ul>
+
+    </div>
+</body>
+</html>

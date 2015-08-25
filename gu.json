@@ -1,0 +1,14 @@
+{
+    "base_url": "/feed",
+    "controllers": "./src/js/controllers",
+    "routes": {
+        "GET /": "index"
+    },
+
+    "logdir": "var/logs",
+
+    "secret": "supersecret",
+    "capi_key": "test",
+    "channel": "testing123",
+    "slackWebHook": "https://hooks.slack.com/services/asdfasdfasdfasdfasdf"
+}
