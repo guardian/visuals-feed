@@ -56,10 +56,14 @@
         .date, .classification {
             color: #333;
         }
+        .container > h2:first-child a {
+            font-size: 14px;
+            color: #00456e;
+        }
     </style>
     <div class="container">
 
-        <h2>Latest visuals content</h2>
+        <h2>Latest visuals content <span><a href="log">log</a></span></h2>
 
         <ul>
             {% for i in interactives %}
