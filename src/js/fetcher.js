@@ -6,6 +6,7 @@ import moment from 'moment'
 import matchers from './matchers'
 import _ from 'lodash'
 import gu from 'koa-gu'
+import { saveContent, getMultiple } from './db'
 
 export function transformContent(content) {
     return {
@@ -69,10 +70,6 @@ function msgToSlackPromise(msg) {
 }
 
 export function* fetch() {
-    // yield db.setObj('gu.interactives', []);
-
-    var old = (yield gu.db.getObj('gu.interactives')) || [];
-    var oldById = _.indexBy(old, 'id');
 
     var searchParams = [
         { // search newly published articles
@@ -105,50 +102,31 @@ export function* fetch() {
         }]
 
     var newAndUpdated = [];
-    for (var i = 0; i < searchParams.length; i++) {
-        var results = yield capi(searchParams[i])
-        var newAndUpdatedHere = _(results)
-            .map(transformContent)
-            .filter(function(content) { return content.types.length > 0; })
-            .reject(function(content) { return _(newAndUpdated).pluck('id').contains(content.id); })
-            .filter(function(content) {
-                var existing = oldById[content.id];
-                if (existing) {
-                    var oldTypeNames = _.pluck(existing.types, 'type');
-                    var newTypeNames = _.pluck(content.types, 'type');
-                    return _.xor(oldTypeNames, newTypeNames).length !== 0; // something changed
-                } else {
-                    return true;
-                }
-            })
-            .valueOf();
+    var searchPromises = searchParams.map(params => capi(params));
+    var resultArrays = yield searchPromises;
+    var allResults = [].concat.apply([], resultArrays)
+    var uniqResults = _.uniq(allResults, r => r.id)
+    var visualsItems = uniqResults.map(transformContent).filter(content => content.types.length)
 
-        newAndUpdated = newAndUpdated.concat(newAndUpdatedHere);
-    }
+    var existingItems = yield getMultiple(visualsItems.map(r => r.id))
+    var newAndUpdated = visualsItems.filter((visualsItem, i) =>
+        existingItems[i] === null || _.xor(_.pluck(visualsItem.types, 'type'),
+                                       _.pluck(existingItems[i].types, 'type')).length
+    )
 
-    if (newAndUpdated.length > 0) {
-
-        var messages = newAndUpdated.map(contentToMessage);
-        messages.forEach(gu.log.info.bind(gu.log));
-
-        newAndUpdated.forEach(function(content) {
-            if (oldById[content.id]) {
-                _.remove(old, oldById[content.id]);
-                oldById[content.id] = content;
-            }
-            old.push(content);
-        });
-
+    if (newAndUpdated.length) {
+        gu.log.info(`${newAndUpdated.length} new/updated interactives`);
+        yield newAndUpdated.map(saveContent);
+        var messages = newAndUpdated.map(contentToMessage)
+        messages.forEach(gu.log.info.bind(gu.log))
+        var slackPromises = messages.map(msgToSlackPromise)
         try {
-            yield messages.map(msgToSlackPromise);
+            yield slackPromises;
         } catch (err) {
             gu.log.error('Error posting to slack');
             gu.log.error(err.stack);
             process.exit(1);
         }
-        yield gu.db.setObj('gu.interactives', old.slice(0,1000));
-
-
     } else {
         gu.log.info('No new interactives');
     }
