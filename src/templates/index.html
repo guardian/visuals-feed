@@ -8,10 +8,25 @@
 
         {{ fontCss.toString() }}
 
+        body, html {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: #f7f7f7;
+        }
+
         .container {
             max-width: 900px;
-            margin: auto;
+            background: white;
+            box-sizing: border-box;
+            padding: 12px 40px;
+            margin: 24px auto;
         }
+
+        body .header__logo { max-width: 900px; }
+
         ul {
             list-style-type: none;
             font-family: 'Guardian Text Egyptian Web';
@@ -63,6 +78,7 @@
             color: #00456e;
         }
     </style>
+    {{ header.toString() }}
     <div class="container">
 
         <h2>Latest visuals content <span><a href="log">log</a></span></h2>
