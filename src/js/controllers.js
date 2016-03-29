@@ -18,5 +18,6 @@ exports.index = function *() {
 
 exports.json = function *() {
     var items = yield getLatestRange(0, 200);
+    this.type = "application/json";
     this.body = JSON.stringify(items);
 }
