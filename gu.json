@@ -2,7 +2,8 @@
     "base_url": "/feed",
     "controllers": "./src/js/controllers",
     "routes": {
-        "GET /": "index"
+        "GET /": "index",
+        "GET /json": "json"
     },
 
     "logdir": "var/log",

@@ -5,13 +5,18 @@ import { contentToTypeString } from './fetcher'
 import { getLatestRange } from './db'
 
 exports.index = function *() {
-	var items = yield getLatestRange(0, 200);
-	var annotatedInteractives = _(items)
-		.map(function(i) {
-			i.message = contentToTypeString(i);
-			i.publicationTimeRelative = moment(i.webPublicationDate).fromNow();
-			i.publicationTimeDisplay = moment(i.webPublicationDate).format('DD MMM HH:MM');
-			return i;
-		}).valueOf()
+    var items = yield getLatestRange(0, 200);
+    var annotatedInteractives = _(items)
+        .map(function(i) {
+            i.message = contentToTypeString(i);
+            i.publicationTimeRelative = moment(i.webPublicationDate).fromNow();
+            i.publicationTimeDisplay = moment(i.webPublicationDate).format('DD MMM HH:MM');
+            return i;
+        }).valueOf()
     this.body = gu.tmpl('../templates/index.html', { interactives: annotatedInteractives });
+}
+
+exports.json = function *() {
+    var items = yield getLatestRange(0, 200);
+    this.body = JSON.stringify(items);
 }
