@@ -6,7 +6,6 @@ import koa from 'koa'
 import koaBody from 'koa-body'
 import koaSession from 'koa-session'
 import path from 'path'
-import serve from 'koa-static'
 
 module.exports = www;
 
@@ -47,6 +46,6 @@ function www(opts) {
 
     app.use(gu.router.routes());
     app.use(gu.router.allowedMethods());
-    
+
     return app;
 }
