@@ -11,7 +11,6 @@ export async function getLatestRange(start = 0, end = 100) {
 export async function getMultiple(ids) {
 
 	var keys = ids.map(idToKey)
-	console.log(keys)
 	var strs = await gu.db.mget.call(gu.db, keys);
 	return strs.map(JSON.parse);
 }
