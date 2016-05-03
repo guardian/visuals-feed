@@ -27,11 +27,11 @@ function* capi(params) {
         body = yield rp({
             uri: capi_uri,
             transform: function(body, response) {
-			    return response.headers['content-type'].indexOf('application/json') === 0 ?
-			        JSON.parse(body) : body;
-			}
+                return response.headers['content-type'].indexOf('application/json') === 0 ?
+                    JSON.parse(body) : body;
+            }
         });
-    } catch (err) {
+    } catch (err) { 
         gu.log.error('Error making CAPI request');
         gu.log.error(err.stack)
         process.exit(1);
@@ -40,10 +40,14 @@ function* capi(params) {
     return body.response.results;
 }
 
+export function contentToGroups(content){
+    return _.groupBy(content.types, 'type');
+}
+
 export function contentToTypeString(content) {
     if (content.types.length === 1) {
         var type = content.types[0];
-        return type.type + (type.alt ? ' (' + type.alt  +')' : '');
+        return type.type;
     } else {
         return _(content.types)
             .groupBy('type').mapValues('length')
@@ -68,6 +72,7 @@ function msgToSlackPromise(msg) {
         })
     }) : null;
 }
+
 
 export function* fetch() {
 

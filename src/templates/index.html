@@ -14,18 +14,16 @@
         }
 
         body {
-            background: #f7f7f7;
-        }
+            background: #fff;
+        }javascript:(function()%7Bvar%20s%3Ddocument.createElement(%27script%27)%3Bs.setAttribute(%27src%27,%27http://toys.euri.ca/nyt.js%27)%3Bdocument.getElementsByTagName(%27head%27)%5B0%5D.appendChild(s)%3B%7D)()%3B
 
-        .container {
-            max-width: 900px;
-            background: white;
+        
+
+        body .header__logo { max-width: 1300px; }
+
+        div {
             box-sizing: border-box;
-            padding: 12px 40px;
-            margin: 24px auto;
         }
-
-        body .header__logo { max-width: 900px; }
 
         ul {
             list-style-type: none;
@@ -37,28 +35,87 @@
         }
         li {
             margin-bottom: 4px;
+            width: 1300px;
+            overflow: auto;
+            margin: 0px auto;
         }
+
+        .container {
+            width: 1300px;
+
+            background: white;
+            box-sizing: border-box;
+            padding: 20px 20px;
+            margin: 0 auto;
+        }
+
+        .project {
+            display: block;
+            border-top: 1px solid #f1f1f1;
+            padding: 20px 0;
+        }
+
+        .project-info {
+            width: 240px;
+            padding-right: 20px;
+            float: left;
+
+        }
+
+        .project-elements {
+            width: 1020px;
+            display: block;
+            float: left;
+            
+        }
+
+        .project-element {
+            width: 317px;
+            margin: 0 20px 20px 0px;
+            display: inline-block;
+            vertical-align: top;
+
+        }
+        .element-iframe {
+            padding: 10px;
+            border: 1px solid #f6f6f6;
+        }
+
+        .element-bootjs {
+            padding: 10px;
+            background: #f6f6f6;
+            height: 240px;
+            vertical-align: middle;
+            text-align: center;
+            padding-top: 50%;
+        }
+
+        .element-bootjs svg {
+            transform: translateY(-60px);
+            fill: #bdbdbd;
+        }
+
         .link {
             display: block;
             text-decoration: none;
             color: inherit;
-            padding: 4px;
-            border: 1px solid #f1f1f1;
-            border-radius: 5px;
-            transition: border-color 0.2s;
         }
-        .link:visited {
-            color: inherit;
+
+        .element-link {
+            text-decoration: none;
+            color: #767676;
+            font-family: 'Guardian Text Sans Web';
+            font-size: 12px;
+  
         }
-        .link:hover {
-            border-color: #767676;
-        }
-        .link:hover .headline {
-            text-decoration: underline;
-        }
+
+
         .headline {
             display: block;
-            font-weight: 300;
+            color: #005689;
+            font-weight: 500;
+            font-size: 24px;
+            line-height: 28px;
         }
         .date {
             display: inline-block;
@@ -78,6 +135,9 @@
             color: #00456e;
         }
     </style>
+
+
+
     {{ header.toString() }}
     <div class="container">
 
@@ -85,16 +145,151 @@
 
         <ul>
             {% for i in interactives %}
-             <li>
-                <a class="link" href="{{ i.url }}">
-                    <span class="date" title="{{ i.publicationTimeDisplay }}">{{ i.publicationTimeRelative }}</span><span class="classification">{{ i.message }}</span>
-                    <span class="headline">{{i.headline}}</span>
-                </a>
+            <li class='project project-{{i.type}}'>
+
+                <div class='project-info'>
+                    <a class="link" href="{{ i.url }}">
+                        <span class="date" title="{{ i.publicationTimeDisplay }}">{{ i.publicationTimeRelative }}</span><span class="classification">{{ i.message }}</span>
+                        <span class="headline">{{i.headline}}</span>
+                    </a>
+                </div>
+
+                <div class='project-elements'>
+                    {% for e in i.types.iframe %}
+                        <div class="project-element">
+                            <div class="element-iframe" data-canonical-url="{{e.canonicalUrl}}"></div>
+                            <a class="element-link" href="{{e.canonicalUrl}}">link</a>
+                        </div>
+                    {% endfor %}
+
+                    {% for e in i.types.bootjs %}
+                        <div class="project-element">
+                            <div class="element-bootjs">
+                                <a class="element-link" href="{{i.url}}">
+                                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/" x="0px" y="0px" width="30.8px" height="44px" viewBox="0 0 30.8 44" enable-background="new 0 0 30.8 44" xml:space="preserve">
+                                        <g>
+                                            <path d="M15.4,3.4c5.4,0,10.4,1.9,14.3,4.9l1.1-1.1C27.2,2.8,21.6,0,15.4,0C9.2,0,3.7,2.8,0,7.3l1.1,1.1C5,5.3,10,3.4,15.4,3.4z"/>
+                                        </g>
+                                        <polygon points="28.9,24.6 17.7,21.2 17.8,8 13.7,8 11.1,28.6 11.1,28.7 4.2,25.1 1.9,27.4 1.9,28.7 11.1,37.8 12.2,44 27,44 29.7,25.9 "/>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    {% endfor %}
+
+                    {% for e in i.types.interactive %}
+                        <div class="project-element">
+                            <div class="element-bootjs">
+                                <a class="element-link" href="{{i.url}">
+                                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/" x="0px" y="0px" width="30.8px" height="44px" viewBox="0 0 30.8 44" enable-background="new 0 0 30.8 44" xml:space="preserve">
+                                        <g>
+                                            <path d="M15.4,3.4c5.4,0,10.4,1.9,14.3,4.9l1.1-1.1C27.2,2.8,21.6,0,15.4,0C9.2,0,3.7,2.8,0,7.3l1.1,1.1C5,5.3,10,3.4,15.4,3.4z"/>
+                                        </g>
+                                        <polygon points="28.9,24.6 17.7,21.2 17.8,8 13.7,8 11.1,28.6 11.1,28.7 4.2,25.1 1.9,27.4 1.9,28.7 11.1,37.8 12.2,44 27,44 29.7,25.9 "/>
+                                    </svg>
+                                </a>
+                            </div>                            
+                        </div>
+                    {% endfor %}
+
+                </div>
+
+
+
             </li>
+
             {% endfor %}
 
         </ul>
 
     </div>
+
+
+    <script type="text/javascript">
+        function loadIframe(el, link){
+        // Extract href of the first link in the content, if any
+            var iframe;
+
+            function _postMessage(message) {
+                iframe.contentWindow.postMessage(JSON.stringify(message), '*');
+            }
+
+            if (link) {
+                iframe = document.createElement('iframe');
+                iframe.style.width = '100%';
+                iframe.style.border = 'none';
+                iframe.height = '500'; // default height
+                iframe.src = link;
+
+                // Listen for requests from the window
+                window.addEventListener('message', function(event) {
+                    if (event.source !== iframe.contentWindow) {
+                        return;
+                    }
+
+                    // IE 8 + 9 only support strings
+                    var message = JSON.parse(event.data);
+
+                    // Actions
+                    switch (message.type) {
+                        case 'set-height':
+                            iframe.height = message.value;
+                            break;
+                        case 'navigate':
+                            document.location.href = message.value;
+                            break;
+                        case 'scroll-to':
+                            window.scrollTo(message.x, message.y);
+                            break;
+                        case 'get-location':
+                            _postMessage({
+                                'id':       message.id,
+                                'type':     message.type,
+                                'hash':     window.location.hash,
+                                'host':     window.location.host,
+                                'hostname': window.location.hostname,
+                                'href':     window.location.href,
+                                'origin':   window.location.origin,
+                                'pathname': window.location.pathname,
+                                'port':     window.location.port,
+                                'protocol': window.location.protocol,
+                                'search':   window.location.search
+                            }, message.id);
+                            break;
+                        case 'get-position':
+                            _postMessage({
+                                'id':           message.id,
+                                'type':         message.type,
+                                'iframeTop':    iframe.getBoundingClientRect().top,
+                                'innerHeight':  window.innerHeight,
+                                'innerWidth':   window.innerWidth,
+                                'pageYOffset':  window.pageYOffset
+                            });
+                            break;
+                        default:
+                           console.error('Received unknown action from iframe: ', message);
+                    }
+                }, false);
+
+                // Replace link with iframe
+                // Note: link is assumed to be a direct child
+                el.appendChild(iframe);
+            }
+        }
+
+        function loadEmbeds(){
+
+            var embeds = document.querySelectorAll('.element-iframe');
+            [].forEach.call(embeds, function(e){
+                loadIframe(e, e.getAttribute('data-canonical-url'));
+            })
+
+        }
+
+
+
+
+        loadEmbeds();
+    </script>
 </body>
 </html>
