@@ -17,7 +17,7 @@ function categorizeElementInteractive($el) {
 exports.getTypes = function(content) {
 	var types = []
 
-	if (isInteractive(content)) types.push({type:'interactive'});
+	if (isInteractive(content)) types.push({type:'bootjs'});
 	else if (content.fields.body) {
 		var $ = cheerio.load(content.fields.body);
 		var embedTypes = $('.element-interactive').each(function(i, el){

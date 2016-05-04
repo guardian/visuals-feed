@@ -10,6 +10,7 @@ import { saveContent, getMultiple } from './db'
 
 export function transformContent(content) {
     return {
+        pageType: content.type,
         id: content.id,
         webPublicationDate: content.webPublicationDate,
         findDate: (new Date()).toISOString(),

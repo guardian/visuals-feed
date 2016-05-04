@@ -7,7 +7,6 @@ import { getLatestRange } from './db'
 exports.index = function *() {
 
     var items = yield getLatestRange(0, 200);
-
     var annotatedInteractives = _(items)
         .map(function(i) {
             i.message = contentToTypeString(i);

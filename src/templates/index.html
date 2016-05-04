@@ -109,6 +109,9 @@
   
         }
 
+        .date, .classification, .pagetype {
+            color: #333;
+        }
 
         .headline {
             display: block;
@@ -121,15 +124,22 @@
             display: inline-block;
             font-family: 'Guardian Egyptian Web';
             font-weight: 500;
-            width: 100px;
+            margin-right: 10px;
         }
         .classification {
             font-weight: 400;
-            text-decoration: underline;
+            color: #767676;
+            font-family: 'Guardian Text Sans Web';
         }
-        .date, .classification {
-            color: #333;
+        .pagetype {
+            font-weight: 400;   
+             display: inline-block;
         }
+        .pagetype::first-letter{
+            text-transform: uppercase;
+        }
+
+        
         .container > h2:first-child a {
             font-size: 14px;
             color: #00456e;
@@ -145,13 +155,14 @@
 
         <ul>
             {% for i in interactives %}
-            <li class='project project-{{i.type}}'>
+            <li class='project'>
 
                 <div class='project-info'>
+                    <span class="date" title="{{ i.publicationTimeDisplay }}">{{ i.publicationTimeRelative }}</span><div class="pagetype">{{ i.pageType }}</div>
                     <a class="link" href="{{ i.url }}">
-                        <span class="date" title="{{ i.publicationTimeDisplay }}">{{ i.publicationTimeRelative }}</span><span class="classification">{{ i.message }}</span>
                         <span class="headline">{{i.headline}}</span>
                     </a>
+                    <span class="classification">Content: {{ i.message }}</span>
                 </div>
 
                 <div class='project-elements'>
@@ -233,7 +244,7 @@
                     // Actions
                     switch (message.type) {
                         case 'set-height':
-                            iframe.height = message.value;
+                            iframe.height = (message.value <= 720) ? message.value : 720;
                             break;
                         case 'navigate':
                             document.location.href = message.value;
