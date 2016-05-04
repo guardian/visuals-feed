@@ -6,6 +6,8 @@ import { getLatestRange } from './db'
 
 exports.index = function *() {
 
+    var startDate = moment().subtract(3, 'days');
+
     var items = yield getLatestRange(0, 200);
     var annotatedInteractives = _(items)
         .map(function(i) {
@@ -14,7 +16,11 @@ exports.index = function *() {
             i.publicationTimeRelative = moment(i.webPublicationDate).fromNow();
             i.publicationTimeDisplay = moment(i.webPublicationDate).format('DD MMM HH:MM');
             return i;
-        }).valueOf()
+        })
+        .filter(function(i){
+            return ( moment(i.webPublicationDate) >= startDate )? true : false;
+        })
+        .valueOf()
 
     this.body = gu.tmpl('../templates/index.html', { interactives: annotatedInteractives });
 }
