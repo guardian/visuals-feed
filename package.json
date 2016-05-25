@@ -19,7 +19,7 @@
     "koa": "^0.21.0",
     "koa-body": "^1.2.0",
     "koa-compress": "^1.0.8",
-    "koa-gu": "0.0.12",
+    "koa-gu": "0.0.15",
     "koa-logger": "^1.2.2",
     "koa-resource-router": "^0.4.0",
     "koa-response-time": "^1.0.2",

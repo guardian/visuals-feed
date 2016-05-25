@@ -2,7 +2,7 @@ import { fetch } from './fetcher'
 import co from 'co'
 import gu from 'koa-gu'
 
-gu.init(false)
+gu.init({www:false})
 
 co(fetch)
 	.then(_ => {
