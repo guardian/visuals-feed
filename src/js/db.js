@@ -19,5 +19,4 @@ export async function getMultiple(ids) {
 export async function saveContent(content) {
 	await gu.db.set(idToKey(content.id), JSON.stringify(content))
 	var len = await gu.db.zadd('feed', Date.parse(content.webPublicationDate), content.id)
-	console.log('zadd', len);
 }

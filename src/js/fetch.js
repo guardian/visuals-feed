@@ -1,14 +1,13 @@
 import { fetch } from './fetcher'
-import co from 'co'
 import gu from 'koa-gu'
 
 gu.init({www:false})
 
-co(fetch)
-	.then(_ => {
+fetch()
+	.then(() => {
 		gu.log.info('done')
 		gu.db.quit();
 	})
 	.catch(err =>
-		gu.log.error(err.stack, _ => process.exit(1))
+		gu.log.error(err.stack, () => process.exit(1))
 	)

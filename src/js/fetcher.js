@@ -20,24 +20,16 @@ export function transformContent(content) {
     }
 }
 
-function* capi(params) {
-    var body;
-    try {
-        var capi_uri = 'http://content.guardianapis.com/search?' + querystring.stringify(params);
-        gu.log.debug(`Requesting ${capi_uri}`)
-        body = yield rp({
-            uri: capi_uri,
-            transform: function(body, response) {
-                return response.headers['content-type'].indexOf('application/json') === 0 ?
-                    JSON.parse(body) : body;
-            }
-        });
-    } catch (err) { 
-        gu.log.error('Error making CAPI request');
-        gu.log.error(err.stack)
-        process.exit(1);
-    }
-
+async function capi(params) {
+    var capi_uri = 'http://content.guardianapis.com/search?' + querystring.stringify(params);
+    gu.log.debug(`Requesting ${capi_uri}`)
+    var body = await rp({
+        uri: capi_uri,
+        transform: function(body, response) {
+            return response.headers['content-type'].indexOf('application/json') === 0 ?
+                JSON.parse(body) : body;
+        }
+    });
     return body.response.results;
 }
 
@@ -75,7 +67,7 @@ function msgToSlackPromise(msg) {
 }
 
 
-export function* fetch() {
+export async function fetch() {
 
     var searchParams = [
         { // search newly published articles
@@ -109,12 +101,20 @@ export function* fetch() {
 
     var newAndUpdated = [];
     var searchPromises = searchParams.map(params => capi(params));
-    var resultArrays = yield searchPromises;
+
+    try {
+        var resultArrays = await Promise.all(searchPromises);
+    } catch (err) {
+        gu.log.error('Error making CAPI request');
+        gu.log.error(err.stack)
+        process.exit(1);
+    };
+
     var allResults = [].concat.apply([], resultArrays)
     var uniqResults = _.uniq(allResults, r => r.id)
     var visualsItems = uniqResults.map(transformContent).filter(content => content.types.length)
 
-    var existingItems = yield getMultiple(visualsItems.map(r => r.id))
+    var existingItems = await getMultiple(visualsItems.map(r => r.id))
     var newAndUpdated = visualsItems.filter((visualsItem, i) =>
         existingItems[i] === null || _.xor(_.pluck(visualsItem.types, 'type'),
                                        _.pluck(existingItems[i].types, 'type')).length
@@ -122,12 +122,12 @@ export function* fetch() {
 
     if (newAndUpdated.length) {
         gu.log.info(`${newAndUpdated.length} new/updated interactives`);
-        yield newAndUpdated.map(saveContent);
+        await Promise.all(newAndUpdated.map(saveContent));
         var messages = newAndUpdated.map(contentToMessage)
         messages.forEach(gu.log.info.bind(gu.log))
         var slackPromises = messages.map(msgToSlackPromise)
         try {
-            yield slackPromises;
+            await Promise.all(slackPromises);
         } catch (err) {
             gu.log.error('Error posting to slack');
             gu.log.error(err.stack);
