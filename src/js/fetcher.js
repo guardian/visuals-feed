@@ -21,7 +21,7 @@ export function transformContent(content) {
 }
 
 async function capi(params) {
-    var capi_uri = 'http://content.guardianapis.com/search?' + querystring.stringify(params);
+    var capi_uri = 'https://content.guardianapis.com/search?' + querystring.stringify(params);
     gu.log.debug(`Requesting ${capi_uri}`)
     var body = await rp({
         uri: capi_uri,
